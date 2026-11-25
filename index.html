@@ -1,19 +1,119 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#09090d"><title>CinemaHub — Stories worth staying for</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#09090d">
+<title>CinemaHub — Stream original stories</title>
+<meta name="description" content="CinemaHub originals — movies and series made for your screen.">
+<script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.2"></script>
 <style>
-:root{color-scheme:dark;--bg:#09090d;--panel:#15151d;--muted:#a5a5b3;--accent:#e8bd72;--line:#292934}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#f7f5f1;font:16px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}a{color:inherit;text-decoration:none}.nav{height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 6%;border-bottom:1px solid var(--line);position:sticky;top:0;background:#09090ded;backdrop-filter:blur(14px);z-index:5}.brand{font-weight:900;letter-spacing:2px;font-size:20px}.brand span{color:var(--accent)}.navlinks{display:flex;gap:24px;align-items:center;color:#d1cfce;font-size:14px}.pill{background:var(--accent);color:#17120b;padding:10px 17px;border-radius:5px;font-weight:800}.hero{min-height:520px;padding:100px 8% 70px;background:linear-gradient(90deg,#09090d 0%,#09090ddd 44%,#09090d44 100%),radial-gradient(ellipse at 76% 35%,#63452d 0%,#29202b 28%,#09090d 68%);display:flex;align-items:center}.hero-inner{max-width:650px}.eyebrow{color:var(--accent);font-size:12px;letter-spacing:3px;font-weight:800}.hero h1{font-size:clamp(42px,7vw,76px);line-height:1.02;margin:18px 0}.hero p{color:#c1bdc0;max-width:510px}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}.outline{border:1px solid #77717a;padding:10px 17px;border-radius:5px}.section{padding:42px 6%}.section-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:20px}.section h2{font-size:23px;margin:0}.muted{color:var(--muted);font-size:14px}.empty{border:1px dashed #383844;border-radius:10px;padding:35px 20px;text-align:center;color:var(--muted);background:linear-gradient(135deg,#14141c,#101016)}.empty strong{display:block;color:#eee;font-size:17px;margin-bottom:6px}.plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}.plan{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:24px}.price{font-size:38px;font-weight:900;color:var(--accent)}footer{border-top:1px solid var(--line);padding:28px 6%;color:var(--muted);font-size:13px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
-@media(max-width:600px){.nav{padding:0 4%}.navlinks{gap:12px;font-size:12px}.navlinks .hide{display:none}.hero{min-height:470px;padding:75px 7%}.section{padding:32px 5%}}
-</style></head>
+:root{color-scheme:dark;--bg:#08080c;--panel:#15151d;--line:#292934;--muted:#a6a4af;--gold:#e8bd72;--white:#f7f5f1}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--white);font:15px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}a{color:inherit;text-decoration:none}button,input{font:inherit}.nav{height:68px;position:sticky;top:0;z-index:20;background:#09090ded;backdrop-filter:blur(16px);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 5%}.brand{font-size:20px;letter-spacing:2px;font-weight:900}.brand span{color:var(--gold)}.links{display:flex;gap:22px;align-items:center;font-size:13px;color:#d5d1d0}.btn{border:0;border-radius:6px;background:var(--gold);color:#17120b;font-weight:800;padding:11px 17px;cursor:pointer}.btn.secondary{background:#292934;color:#fff;border:1px solid #41414c}.btn:disabled{opacity:.55;cursor:wait}.hero{min-height:510px;padding:90px 8%;display:flex;align-items:center;background:linear-gradient(90deg,#08080c 0%,#08080ce8 43%,#08080c50 100%),radial-gradient(ellipse at 78% 42%,#79563a 0%,#332536 27%,#08080c 68%)}.hero-inner{max-width:650px}.eyebrow{color:var(--gold);letter-spacing:3px;font-size:11px;font-weight:850}.hero h1{font-size:clamp(42px,7vw,76px);line-height:1.02;margin:18px 0}.hero p{max-width:520px;color:#c3bec3}.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:25px}.outline{padding:10px 16px;border:1px solid #79717a;border-radius:6px}.section{padding:36px 5% 24px}.section-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:18px}.section h2{font-size:23px;margin:3px 0}.muted{color:var(--muted)}.rail{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:17px}.tile{min-width:0;cursor:pointer}.poster{aspect-ratio:2/3;background:linear-gradient(145deg,#29232c,#15151d 60%,#392a22);border:1px solid #34313b;border-radius:8px;overflow:hidden;position:relative;display:flex;align-items:center;justify-content:center}.poster img{width:100%;height:100%;object-fit:cover}.poster .fallback{padding:16px;text-align:center;font-weight:850;font-size:18px}.tile h3{font-size:14px;margin:9px 0 1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tile .meta{font-size:11px;color:var(--muted)}.empty{padding:28px;border:1px dashed #393943;border-radius:9px;color:var(--muted);text-align:center}.membership{margin:28px 5%;padding:28px;border:1px solid #59472e;border-radius:12px;background:linear-gradient(120deg,#211b18,#121118);display:flex;justify-content:space-between;gap:20px;align-items:center;flex-wrap:wrap}.price{font-size:35px;font-weight:900;color:var(--gold)}footer{padding:28px 5%;border-top:1px solid var(--line);color:var(--muted);font-size:12px;display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}
+.overlay{position:fixed;inset:0;background:#000c;z-index:50;display:none;overflow:auto;padding:24px 12px}.overlay.show{display:block}.dialog{max-width:760px;margin:4vh auto;background:#121219;border:1px solid #393943;border-radius:12px;padding:22px;position:relative}.close{position:absolute;right:14px;top:12px;background:#292934;color:white;border:0;border-radius:50%;width:36px;height:36px;font-size:20px}.dialog h2{margin:0 45px 8px 0;font-size:25px}.dialog p{color:var(--muted)}.season{border-top:1px solid var(--line);padding:13px 0}.episode{display:flex;justify-content:space-between;gap:14px;align-items:center;padding:10px 0 10px 12px;border-top:1px solid #272731}.episode button{flex-shrink:0}.video{width:100%;max-height:65vh;background:#000;border-radius:8px}.formrow{display:flex;gap:9px;flex-wrap:wrap}.formrow input{flex:1;min-width:200px;background:#09090e;border:1px solid #42414b;color:white;padding:12px;border-radius:7px}.status{font-size:13px;color:var(--gold);white-space:pre-wrap;margin-top:12px}.hidden{display:none!important}.search{background:#111118;border:1px solid #353540;border-radius:7px;color:white;padding:10px 12px;width:min(240px,45vw)}
+@media(max-width:600px){.nav{padding:0 4%}.links{gap:12px;font-size:12px}.links .hide{display:none}.hero{min-height:440px;padding:70px 7%}.section{padding:30px 4% 20px}.rail{grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.membership{margin:20px 4%;padding:20px}.dialog{padding:18px}.section-head{align-items:center}}
+</style>
+</head>
 <body>
-<header class="nav"><a class="brand" href="./">CINEMA<span>HUB</span></a><nav class="navlinks"><a href="#movies">Movies</a><a class="hide" href="#series">Series</a><a href="#membership">Membership</a><a class="pill" href="creator.html">Creator login</a></nav></header>
+<header class="nav"><a class="brand" href="./">CINEMA<span>HUB</span></a><nav class="links"><a href="#movies">Movies</a><a class="hide" href="#series">Series</a><a href="#membership">Membership</a><button class="btn secondary" id="accountBtn">Sign in</button></nav></header>
 <main>
-<section class="hero"><div class="hero-inner"><div class="eyebrow">YOUR STORIES. YOUR SCREEN.</div><h1>Stories worth<br>staying for.</h1><p>Discover original films and series, made to be watched your way. A home for independent stories and fresh voices.</p><div class="actions"><a class="pill" href="#movies">Explore titles</a><a class="outline" href="#membership">View membership</a></div></div></section>
-<section class="section" id="movies"><div class="section-head"><div><div class="eyebrow">THE COLLECTION</div><h2>Original movies</h2></div><span class="muted">CinemaHub originals</span></div><div class="empty"><strong>Your first premiere is coming.</strong>Movies you publish will appear here.</div></section>
-<section class="section" id="series"><div class="section-head"><div><div class="eyebrow">BINGE YOUR WAY</div><h2>Original series</h2></div></div><div class="empty"><strong>New worlds are being prepared.</strong>Your series and episodes will appear here, organised by season.</div></section>
-<section class="section" id="membership"><div class="section-head"><div><div class="eyebrow">ALL ACCESS</div><h2>One membership. Every story.</h2></div></div><div class="plans"><div class="plan"><div class="muted">MONTHLY MEMBERSHIP</div><div class="price">₹99<span style="font-size:15px;color:#aaa;font-weight:500"> / month</span></div><p class="muted">Access to subscriber-only CinemaHub originals while your membership is active.</p><a class="pill" href="mailto:cinemahub.support@example.com?subject=CinemaHub%20membership">Membership coming soon</a></div><div class="plan"><h3>Made by you, for you.</h3><p class="muted">New originals, seasons and episodes added by the creator.</p></div></div><p class="muted">Online subscription checkout is not active yet. Do not send payments until the official checkout is enabled.</p></section>
-</main><footer><span>© 2026 CinemaHub. All rights reserved.</span><a href="creator.html">Creator Studio</a></footer>
+<section class="hero"><div class="hero-inner"><div class="eyebrow">CINEMAHUB ORIGINALS</div><h1>Stories worth<br>staying for.</h1><p>Discover original movies and series, all in one place. Stream on your phone, tablet or TV browser.</p><div class="actions"><a class="btn" href="#movies">Explore titles</a><a class="outline" href="#membership">Membership</a></div></div></section>
+<section class="section" id="movies"><div class="section-head"><div><div class="eyebrow">THE COLLECTION</div><h2>Movies</h2></div><input class="search" id="search" placeholder="Search titles…" aria-label="Search titles"></div><div class="rail" id="movieRail"><div class="empty">Loading movies…</div></div></section>
+<section class="section" id="series"><div class="section-head"><div><div class="eyebrow">BINGE YOUR WAY</div><h2>Series</h2></div><span class="muted">Seasons & episodes</span></div><div class="rail" id="seriesRail"><div class="empty">Loading series…</div></div></section>
+<section class="membership" id="membership"><div><div class="eyebrow">ALL ACCESS</div><h2>One membership. Every story.</h2><div class="muted">Subscriber access to CinemaHub originals.</div></div><div><div class="price">₹99 <small style="font-size:14px;color:#aaa">/ month</small></div><button class="btn" id="joinBtn">Get membership</button></div></section>
+<p class="muted" style="padding:0 5%;font-size:12px">Membership checkout is being connected. No payment is collected on this page yet.</p>
+</main>
+<footer><span>© 2026 CinemaHub. All rights reserved.</span><a href="creator.html">Creator Studio</a></footer>
+
+<div class="overlay" id="detailOverlay"><div class="dialog"><button class="close" data-close="detailOverlay">×</button><div id="detailContent"></div></div></div>
+<div class="overlay" id="playerOverlay"><div class="dialog"><button class="close" data-close="playerOverlay">×</button><h2 id="playerTitle">Now playing</h2><p id="playerInfo">CinemaHub</p><video id="player" class="video" controls playsinline preload="metadata"></video><div class="status" id="playerStatus"></div></div></div>
+<div class="overlay" id="authOverlay"><div class="dialog" style="max-width:480px"><button class="close" data-close="authOverlay">×</button><div class="eyebrow">CINEMAHUB ACCOUNT</div><h2>Sign in to continue</h2><p>Enter your email and we'll send a one-time code.</p><div class="formrow"><input type="email" id="viewerEmail" placeholder="Email address" autocomplete="email"></div><button class="btn" id="sendOtp">Send code</button><div id="otpArea" class="hidden"><div class="formrow" style="margin-top:12px"><input id="viewerOtp" inputmode="numeric" maxlength="8" placeholder="Enter email code"></div><button class="btn" id="verifyOtp">Verify and sign in</button></div><div class="status" id="authStatus"></div></div></div>
+<script>
+(function(){
+const URL='https://quotsxqjjupshauthrtf.supabase.co',KEY='sb_publishable_J2Jz4NLPOan97alVyQq1Gg_QlEsAXjg';
+const $=id=>document.getElementById(id);let db,user=null,titles=[],seasons=[],episodes=[],membership=false;
+const esc=s=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function modal(id,on=true){$(id).classList.toggle('show',on)}
+function msg(id,s){$(id).textContent=s}
+function tile(t){const poster=t.poster_url?'<img loading="lazy" src="'+esc(t.poster_url)+'" alt="">':'<div class="fallback">'+esc(t.title)+'</div>';return '<article class="tile" data-title="'+t.id+'"><div class="poster">'+poster+'</div><h3>'+esc(t.title)+'</h3><div class="meta">'+(t.kind==='series'?'SERIES':'MOVIE')+' · '+(t.is_premium?'MEMBERS':'ORIGINAL')+'</div></article>'}
+function render(){
+ const q=$('search').value.trim().toLowerCase(),m=titles.filter(t=>t.kind==='movie'&&t.title.toLowerCase().includes(q)),s=titles.filter(t=>t.kind==='series'&&t.title.toLowerCase().includes(q));
+ $('movieRail').innerHTML=m.length?m.map(tile).join(''):'<div class="empty">No movies published yet.</div>';
+ $('seriesRail').innerHTML=s.length?s.map(tile).join(''):'<div class="empty">No series published yet.</div>';
+}
+async function load(){
+ try{
+ const [t,s,e]=await Promise.all([
+ db.from('titles').select('id,kind,title,synopsis,poster_url,movie_video_path,is_premium,is_published,content_type,created_at').eq('is_published',true).order('created_at',{ascending:false}),
+ db.from('seasons').select('id,title_id,season_number,name,is_published').eq('is_published',true).order('season_number'),
+ db.from('episodes').select('id,season_id,episode_number,title,synopsis,video_path,thumbnail_url,duration_seconds,is_published').eq('is_published',true).order('episode_number')
+ ]);
+ if(t.error)throw t.error;if(s.error)throw s.error;if(e.error)throw e.error;
+ titles=t.data||[];seasons=s.data||[];episodes=e.data||[];render();
+ }catch(e){$('movieRail').innerHTML='<div class="empty">Could not load the collection. '+esc(e.message)+'</div>';$('seriesRail').innerHTML='';}
+}
+async function checkMembership(){
+ membership=false;if(!user)return false;
+ const {data,error}=await db.from('subscriptions').select('status,current_period_end').eq('user_id',user.id).eq('status','active').order('current_period_end',{ascending:false}).limit(1);
+ if(error){console.warn(error);return false}
+ membership=(data||[]).some(x=>!x.current_period_end||new Date(x.current_period_end)>new Date());return membership;
+}
+function updateAccount(){ $('accountBtn').textContent=user?(user.email||'Account').split('@')[0]:'Sign in';}
+async function openTitle(id){
+ const t=titles.find(x=>x.id===id);if(!t)return;
+ const epsBySeason=seasons.filter(s=>s.title_id===id);
+ let html='<div class="eyebrow">'+(t.kind==='series'?'CINEMAHUB SERIES':'CINEMAHUB MOVIE')+'</div><h2>'+esc(t.title)+'</h2><p>'+esc(t.synopsis||'An original from CinemaHub.')+'</p>';
+ if(t.kind==='movie'){
+ html+='<button class="btn" id="playTitle">▶  Play movie</button>';
+ }else{
+ if(!epsBySeason.length)html+='<div class="empty">Episodes are coming soon.</div>';
+ for(const s of epsBySeason){html+='<div class="season"><b>'+esc(s.name||('Season '+s.season_number))+'</b>';
+ const eps=episodes.filter(e=>e.season_id===s.id);
+ if(!eps.length)html+='<p class="muted">Episodes coming soon.</p>';
+ for(const ep of eps)html+='<div class="episode"><div><b>'+('E'+ep.episode_number+' · '+esc(ep.title))+'</b><div class="muted">'+esc(ep.synopsis||'')+'</div></div><button class="btn secondary" data-episode="'+ep.id+'">Play</button></div>';
+ html+='</div>'}
+ }
+ $('detailContent').innerHTML=html;modal('detailOverlay');
+ const play=$('playTitle');if(play)play.onclick=()=>playVideo(t.title,t.movie_video_path);
+ $('detailContent').querySelectorAll('[data-episode]').forEach(b=>b.onclick=()=>{const ep=episodes.find(x=>x.id===b.dataset.episode);if(ep)playVideo(t.title+' — '+ep.title,ep.video_path)});
+}
+async function playVideo(title,path){
+ if(!path){msg('playerStatus','This video has not been uploaded yet.');return}
+ if(!user){modal('detailOverlay',false);modal('authOverlay');msg('authStatus','Sign in first. After signing in, return to the title to play.');return}
+ await checkMembership();
+ if(!membership){modal('detailOverlay',false);modal('authOverlay');msg('authStatus','An active ₹99/month membership is required. Checkout is not enabled yet, so no payment can be taken here.');return}
+ try{
+ const {data,error}=await db.storage.from('cinemahub-videos').createSignedUrl(path,3600);
+ if(error)throw error;
+ $('playerTitle').textContent=title;$('player').src=data.signedUrl;$('player').load();msg('playerStatus','Secure playback link expires in 60 minutes.');modal('detailOverlay',false);modal('playerOverlay');
+ }catch(e){msg('playerStatus','Playback error: '+e.message);modal('playerOverlay')}
+}
+async function signIn(){
+ const email=$('viewerEmail').value.trim().toLowerCase();if(!email||!email.includes('@')){msg('authStatus','Enter a valid email address.');return}
+ $('sendOtp').disabled=true;msg('authStatus','Sending one-time code…');
+ try{const {error}=await db.auth.signInWithOtp({email,options:{shouldCreateUser:true}});if(error)throw error;$('otpArea').classList.remove('hidden');msg('authStatus','Code sent. Check your inbox and Spam/Junk.');}
+ catch(e){msg('authStatus','Could not send code: '+e.message)}finally{$('sendOtp').disabled=false}
+}
+async function verify(){
+ const email=$('viewerEmail').value.trim().toLowerCase(),token=$('viewerOtp').value.trim();if(!token){msg('authStatus','Enter the code from your email.');return}
+ $('verifyOtp').disabled=true;msg('authStatus','Verifying…');
+ try{const {data,error}=await db.auth.verifyOtp({email,token,type:'email'});if(error)throw error;user=data.user;updateAccount();await checkMembership();modal('authOverlay',false);msg('authStatus','Signed in successfully.');}
+ catch(e){msg('authStatus','Verification failed: '+e.message)}finally{$('verifyOtp').disabled=false}
+}
+document.addEventListener('click',e=>{
+ const tileEl=e.target.closest('[data-title]');if(tileEl)openTitle(tileEl.dataset.title);
+ const close=e.target.closest('[data-close]');if(close){if(close.dataset.close==='playerOverlay'){$('player').pause();$('player').removeAttribute('src');$('player').load()}modal(close.dataset.close,false)}
+});
+$('search').addEventListener('input',render);$('accountBtn').onclick=()=>{if(user){if(confirm('Sign out of CinemaHub?'))db.auth.signOut()}else modal('authOverlay')};
+$('joinBtn').onclick=()=>{modal('authOverlay');msg('authStatus','Sign in to check your membership. Monthly checkout is not active yet.')}
+$('sendOtp').onclick=signIn;$('verifyOtp').onclick=verify;
+$('viewerOtp').addEventListener('input',e=>e.target.value=e.target.value.replace(/\D/g,'').slice(0,8));
+$('playerOverlay').addEventListener('click',e=>{if(e.target.id==='playerOverlay'){ $('player').pause();$('player').removeAttribute('src');$('player').load();modal('playerOverlay',false)}});
+async function boot(){
+ if(!window.supabase?.createClient){$('movieRail').innerHTML='<div class="empty">Login and catalogue service unavailable. Refresh the page.</div>';return}
+ db=window.supabase.createClient(URL,KEY);
+ const {data}=await db.auth.getSession();user=data.session?.user||null;updateAccount();await load();if(user)await checkMembership();
+ db.auth.onAuthStateChange(async(_event,session)=>{user=session?.user||null;updateAccount();if(user)await checkMembership();else membership=false});
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
+})();
+</script>
 </body></html>
