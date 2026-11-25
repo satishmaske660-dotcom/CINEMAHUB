@@ -1,6 +1,7 @@
 package com.cinemahub.uploader
 import android.Manifest
 import android.app.*
+import androidx.activity.ComponentActivity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -9,7 +10,7 @@ import android.os.Bundle
 import android.view.ViewGroup
 import android.widget.*
 import androidx.activity.result.contract.ActivityResultContracts
-class MainActivity:Activity(){
+class MainActivity:ComponentActivity(){
  private val prefs by lazy{getSharedPreferences("cinemahub",MODE_PRIVATE)}
  private lateinit var root:LinearLayout;private lateinit var status:TextView;private var picked:Uri?=null
  private val picker=registerForActivityResult(ActivityResultContracts.OpenDocument()){u->if(u!=null){try{contentResolver.takePersistableUriPermission(u,Intent.FLAG_GRANT_READ_URI_PERMISSION)}catch(_:Exception){};picked=u;status.text="Video selected."}}
