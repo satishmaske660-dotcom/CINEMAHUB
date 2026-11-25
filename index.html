@@ -103,7 +103,17 @@ document.addEventListener('click',e=>{
  const close=e.target.closest('[data-close]');if(close){if(close.dataset.close==='playerOverlay'){$('player').pause();$('player').removeAttribute('src');$('player').load()}modal(close.dataset.close,false)}
 });
 $('search').addEventListener('input',render);$('accountBtn').onclick=()=>{if(user){if(confirm('Sign out of CinemaHub?'))db.auth.signOut()}else modal('authOverlay')};
-$('joinBtn').onclick=()=>{modal('authOverlay');msg('authStatus','Sign in to check your membership. Monthly checkout is not active yet.')}
+$('joinBtn').onclick=async()=>{
+ if(!user){modal('authOverlay');msg('authStatus','Sign in first. Then tap Get membership again.');return}
+ $('joinBtn').disabled=true;$('joinBtn').textContent='Preparing secure checkout…';
+ try{
+  const {data,error}=await db.functions.invoke('create-razorpay-subscription',{body:{}});
+  if(error)throw error;
+  if(!data?.short_url)throw new Error(data?.error||'Razorpay did not return a checkout link.');
+  window.location.href=data.short_url;
+ }catch(e){alert('Membership checkout is not ready: '+(e.message||e));}
+ finally{$('joinBtn').disabled=false;$('joinBtn').textContent='Get membership'}
+}
 $('sendOtp').onclick=signIn;$('verifyOtp').onclick=verify;
 $('viewerOtp').addEventListener('input',e=>e.target.value=e.target.value.replace(/\D/g,'').slice(0,8));
 $('playerOverlay').addEventListener('click',e=>{if(e.target.id==='playerOverlay'){ $('player').pause();$('player').removeAttribute('src');$('player').load();modal('playerOverlay',false)}});
