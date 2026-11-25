@@ -22,7 +22,7 @@ function boot(){
  }
  button.onclick=async()=>{
   const email=$('email').value.trim().toLowerCase();
-  if(email!=='deltasatish9@gmail.com'){say('loginStatus','This email is not authorised.');return;}
+  if(email!=='satishmaske660@gmail.com'){say('loginStatus','This email is not authorised.');return;}
   button.disabled=true;say('loginStatus','Sending secure sign-in link…');
   try{
    const redirect=location.origin+location.pathname;
