@@ -17,7 +17,7 @@
 <main>
 <section class="hero"><div class="hero-inner"><div class="eyebrow">CINEMAHUB ORIGINALS</div><h1>Stories worth<br>staying for.</h1><p>Discover original movies and series, all in one place. Stream on your phone, tablet or TV browser.</p><div class="actions"><a class="btn" href="#movies">Explore titles</a><a class="outline" href="#membership">Membership</a></div></div></section>
 <section class="section" id="movies"><div class="section-head"><div><div class="eyebrow">THE COLLECTION</div><h2>Movies</h2></div><input class="search" id="search" placeholder="Search titles…" aria-label="Search titles"></div><div class="rail" id="movieRail"><div class="empty">Loading movies…</div></div></section>
-<section class="section" id="series"><div class="section-head"><div><div class="eyebrow">BINGE YOUR WAY</div><h2>Series</h2></div><span class="muted">Seasons & episodes</span></div><div class="rail" id="seriesRail"><div class="empty">Loading series…</div></div></section>
+<section class="section" id="series"><div class="section-head"><div><div class="eyebrow">BINGE YOUR WAY</div><h2>Series</h2></div><span class="muted">Seasons & episodes</span></div><div class="rail" id="seriesRail"><div class="empty">Loading series…</div></div></section><section class="section" id="extras"><div class="section-head"><div><div class="eyebrow">MORE TO WATCH</div><h2>Content</h2></div><span class="muted">Short films · trailers · extras</span></div><div class="rail" id="contentRail"><div class="empty">Loading content…</div></div></section>
 <section class="membership" id="membership"><div><div class="eyebrow">ALL ACCESS</div><h2>One membership. Every story.</h2><div class="muted">Subscriber access to CinemaHub originals.</div></div><div><div class="price">₹99 <small style="font-size:14px;color:#aaa">/ month</small></div><button class="btn" id="joinBtn">Get membership</button></div></section>
 <p class="muted" style="padding:0 5%;font-size:12px">Membership checkout is being connected. No payment is collected on this page yet.</p>
 </main>
@@ -35,9 +35,9 @@ function modal(id,on=true){$(id).classList.toggle('show',on)}
 function msg(id,s){$(id).textContent=s}
 function tile(t){const poster=t.poster_url?'<img loading="lazy" src="'+esc(t.poster_url)+'" alt="">':'<div class="fallback">'+esc(t.title)+'</div>';return '<article class="tile" data-title="'+t.id+'"><div class="poster">'+poster+'</div><h3>'+esc(t.title)+'</h3><div class="meta">'+(t.kind==='series'?'SERIES':'MOVIE')+' · '+(t.is_premium?'MEMBERS':'ORIGINAL')+'</div></article>'}
 function render(){
- const q=$('search').value.trim().toLowerCase(),m=titles.filter(t=>t.kind==='movie'&&t.title.toLowerCase().includes(q)),s=titles.filter(t=>t.kind==='series'&&t.title.toLowerCase().includes(q));
+ const q=$('search').value.trim().toLowerCase(),m=titles.filter(t=>t.kind==='movie'&&t.title.toLowerCase().includes(q)),s=titles.filter(t=>t.kind==='series'&&t.title.toLowerCase().includes(q)),x=titles.filter(t=>t.kind==='content'&&t.title.toLowerCase().includes(q));
  $('movieRail').innerHTML=m.length?m.map(tile).join(''):'<div class="empty">No movies published yet.</div>';
- $('seriesRail').innerHTML=s.length?s.map(tile).join(''):'<div class="empty">No series published yet.</div>';
+ $('seriesRail').innerHTML=s.length?s.map(tile).join(''):'<div class="empty">No series published yet.</div>'; $('contentRail').innerHTML=x.length?x.map(tile).join(''):'<div class="empty">No extra content published yet.</div>';
 }
 async function load(){
  try{
@@ -61,8 +61,8 @@ async function openTitle(id){
  const t=titles.find(x=>x.id===id);if(!t)return;
  const epsBySeason=seasons.filter(s=>s.title_id===id);
  let html='<div class="eyebrow">'+(t.kind==='series'?'CINEMAHUB SERIES':'CINEMAHUB MOVIE')+'</div><h2>'+esc(t.title)+'</h2><p>'+esc(t.synopsis||'An original from CinemaHub.')+'</p>';
- if(t.kind==='movie'){
- html+='<button class="btn" id="playTitle">▶  Play movie</button>';
+ if(t.kind!=='series'){
+ html+='<button class="btn" id="playTitle">▶  Play video</button>';
  }else{
  if(!epsBySeason.length)html+='<div class="empty">Episodes are coming soon.</div>';
  for(const s of epsBySeason){html+='<div class="season"><b>'+esc(s.name||('Season '+s.season_number))+'</b>';
