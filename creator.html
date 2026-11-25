@@ -15,6 +15,7 @@
 <div class="card"><div class="eyebrow">LIBRARY</div><h2>Manage titles</h2><div id="library" class="muted">Loading…</div></div>
 </section></div><script>
 (function(){
+ document.addEventListener('DOMContentLoaded',function(){
  const status=document.getElementById('loginStatus');
  const btn=document.getElementById('sendLink');
  function message(text){if(status)status.textContent=text;}
@@ -30,6 +31,7 @@
    if(btn)btn.disabled=true;
  };
  document.head.appendChild(s);
+ });
 })();
 </script>
 </body></html>
