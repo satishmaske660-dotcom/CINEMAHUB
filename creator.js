@@ -1,4 +1,4 @@
-const URL='https://quotsxqjjupshauthrtf.supabase.co',KEY='sb_publishable_J2Jz4NLPOan97alVyQq1Gg_QlEsAXjg';
+const SUPABASE_URL='https://quotsxqjjupshauthrtf.supabase.co',KEY='sb_publishable_J2Jz4NLPOan97alVyQq1Gg_QlEsAXjg';
 const $=id=>document.getElementById(id);
 const say=(id,s)=>{const el=$(id);if(el)el.textContent=s;};
 const show=(id,v)=>{const el=$(id);if(el)el.classList.toggle('hidden',!v);};
@@ -7,7 +7,7 @@ const esc=s=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 function boot(){
  const button=$('sendLink');
  if(!window.supabase?.createClient){say('loginStatus','Login service did not load. Check your internet connection, refresh this page, and try again.');if(button)button.disabled=true;return;}
- db=window.supabase.createClient(URL,KEY);
+ db=window.supabase.createClient(SUPABASE_URL,KEY);
  async function refresh(){
   const {data:t,error}=await db.from('titles').select('*').order('created_at',{ascending:false});if(error)throw error;
   const series=(t||[]).filter(x=>x.kind==='series');
